@@ -1,0 +1,67 @@
+-- database: ./db.sqlite3
+
+SELECT * FROM api_filmes;
+
+INSERT INTO api_filmes (titulo, genero, ano, idioma, classf) VALUES
+('A Jornada do Herói', 'Ação', '2024', 'Português', '12'),
+('O Mistério da Floresta', 'Mistério', '2023', 'Inglês', '14'),
+('Amor em Paris', 'Romance', '2022', 'Francês', '12'),
+('O Último Samurai', 'Aventura', '2021', 'Japonês', '16'),
+('Na Caverna dos Dragões', 'Fantasia', '2024', 'Inglês', '10'),
+('O Jogo da Mente', 'Thriller', '2023', 'Espanhol', '18'),
+('Rumo ao Espaço', 'Ficção Científica', '2024', 'Inglês', '12'),
+('O Enigma do Tempo', 'Ação', '2022', 'Alemão', '14'),
+('Segredos do Oceano', 'Documentário', '2023', 'Português', 'Livre'),
+('Amigos Imortais', 'Comédia', '2024', 'Inglês', '10'),
+('A Última Esperança', 'Drama', '2021', 'Francês', '16'),
+('A Revolta dos Robôs', 'Ficção Científica', '2024', 'Japonês', '12'),
+('O Segredo da Montanha', 'Aventura', '2023', 'Inglês', '10'),
+('Vingança da Noite', 'Thriller', '2022', 'Espanhol', '18'),
+('A Última Batalha', 'Ação', '2024', 'Inglês', '12'),
+('O Jardim dos Sonhos', 'Fantasia', '2021', 'Português', '10'),
+('Coração de Leão', 'Romance', '2023', 'Italiano', '14'),
+('Entre as Nuvens', 'Drama', '2024', 'Francês', '16'),
+('Exploradores do Universo', 'Ficção Científica', '2022', 'Inglês', '12'),
+('O Labirinto das Sombras', 'Mistério', '2023', 'Espanhol', '14'),
+('O Caminho da Verdade', 'Documentário', '2024', 'Português', 'Livre');
+
+CREATE TABLE genre (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    genero VARCHAR(255) NULL
+);
+
+DROP TABLE genre;
+
+SELECT * FROM genre;
+
+INSERT INTO Genero (genero) VALUES
+('Ação'),
+('Aventura'),
+('Animação'),
+('Comédia'),
+('Crime'),
+('Documentário'),
+('Drama'),
+('Família'),
+('Fantasia'),
+('Ficção Científica'),
+('História'),
+('Mistério'),
+('Musical'),
+('Romance'),
+('Suspense'),
+('Terror'),
+('Guerra'),
+('Western');
+
+UPDATE api_filmes 
+SET genero = NULL;  
+
+SELECT * FROM Genero;
+
+DELETE FROM api_filmes;
+
+
+DROP TABLE api_filmes;
+
+DROP TABLE Genero;

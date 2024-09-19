@@ -1,0 +1,48 @@
+-- database: ../db.sqlite3
+
+SELECT * FROM api_filmes;
+
+INSERT INTO api_genero(genre) VALUES
+('Ação'),
+('Aventura'),
+('Animação'),
+('Comédia'),
+('Crime'),
+('Documentário'),
+('Drama'),
+('Família'),
+('Fantasia'),
+('Ficção Científica'),
+('História'),
+('Mistério'),
+('Musical'),
+('Romance'),
+('Suspense'),
+('Terror'),
+('Guerra'),
+('Western');
+
+
+
+INSERT INTO api_filmes (titulo, genre_id, ano, idioma, classf) VALUES
+('O Último Samurai', 1, '2003', 'Inglês', 'R'),
+('O Senhor dos Anéis: A Sociedade do Anel', 6, '2001', 'Inglês', 'PG-13'),
+('Harry Potter e a Pedra Filosofal', 6, '2001', 'Inglês', 'PG'),
+('Pulp Fiction', 2, '1994', 'Inglês', 'R'),
+('Clube da Luta', 2, '1999', 'Inglês', 'R'),
+('O Poderoso Chefão', 1, '1972', 'Inglês', 'R'),
+('Matrix', 6, '1999', 'Inglês', 'R'),
+('Os Infiltrados', 1, '2006', 'Inglês', 'R'),
+('Gladiador', 1, '2000', 'Inglês', 'R'),
+('O Diabo Veste Prada', 8, '2006', 'Inglês', 'PG-13'),
+('A Origem', 6, '2010', 'Inglês', 'PG-13'),
+('O Grande Lebowski', 2, '1998', 'Inglês', 'R'),
+('O Exorcista', 7, '1973', 'Inglês', 'R'),
+('A Lista de Schindler', 3, '1993', 'Inglês', 'R'),
+('Titanic', 8, '1997', 'Inglês', 'PG-13'),
+('Jurassic Park', 6, '1993', 'Inglês', 'PG-13'),
+('Mad Max: Estrada da Fúria', 1, '2015', 'Inglês', 'R'),
+('O Silêncio dos Inocentes', 7, '1991', 'Inglês', 'R'),
+('O Labirinto do Fauno', 6, '2006', 'Espanhol', 'R'),
+('Coringa', 2, '2019', 'Inglês', 'R'),
+('Avengers: Endgame', 6, '2019', 'Inglês', 'PG-13');
