@@ -1,340 +1,322 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Text, View, TextInput, Button, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './styles';
-import Login from '../login/login';
+import React, { useState, useEffect } from "react";
+import { Text, View, TextInput, Pressable, Image, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import styles from "./styles";
+import axios from "axios";
 
+export default function Home() {
+  const [id, setID] = useState("");
+  const [filmeG, setFilmeG] = useState("");
+  const [generoG, setGeneroG] = useState("");
+  const [anoG, setAnoG] = useState("");
+  const [classifG, setClassifG] = useState("");
+  const [idiomaG, setIdiomaG] = useState("");
+  const [fileNameG, setFileNameG] = useState('')
+  const [filme, setFilme] = useState("");
+  const [genero, setGenero] = useState("");
+  const [ano, setAno] = useState("");
+  const [classif, setClassif] = useState("");
+  const [idioma, setIdioma] = useState("");
+  const [token, setToken] = useState("");
+  const [base64, setBase64] = useState(null);
+  const [imageName, setImageName] = useState(null)
+  const [imageSource, setImageSource] = useState('../../assets/favicon.png')
 
-export default function Home({navigation}){
-
-    const [id, setID] = useState('')
-
-    const [filmeG, setFilmeG] = useState('')
-    const [generoG, setGeneroG] = useState('')
-    const [anoG, setAnoG] = useState('')
-    const [classifG, setClassifG] = useState('')
-    const [idiomaG, setIdiomaG] = useState('')
-
-
-    const [filme, setFilme] = useState('')
-    const [genero, setGenero] = useState('')
-    const [ano, setAno] = useState('')
-    const [classif, setClassif] = useState('')
-    const [idioma, setIdioma] = useState('')
-
-    const [token, setToken] = useState('');
-
-    useEffect(()=> {
-      AsyncStorage.getItem('token')
-          .then(
-              (response)=>{
-                  if(token != null){
-                      console.log('Token Home:', response)
-                      setToken(response)
-                  }
-              }
-          )
-          .catch(
-              (error)=>{
-                  console.error('Erro ao salvar o token', error)
-              }
-          )
-  },
-  [] )
-
-
-  // minha tentativa 
-
-    // useEffect(()=> {
-    //     try{
-    //         const token2 = (AsyncStorage.getItem('token'))
-            
-    //           // setToken(token);
-    //           // console.log('Token encontrado:', tokenHome);
-    //           console.log(token2)
-    //           setToken(token2)
-    //           console.log(token)
-    //         }
-            
-    //         catch{
-    //           (error)=>{
-    //             console.error('Erro ao salvar o token', error)
-    //           }
-
-    //         }
-
-    //     console.log('token Home', token)
-      
-    //  }, 
-    //  [])
-  
-
-    const capturar = async ()=> {
-        try{
-            const response = await axios.get(
-                'http://127.0.0.1:8000/api/filme/'+id,
-                {
-                  headers:{
-                    'Authorization': `Bearer ${token}`
-                  }
-                }
-            )
-
-            const responsegenero = await axios.get(
-              'http://127.0.0.1:8000/api/genero/'+ response.data.genre,
-              {
-                headers:{
-                  'Authorization': `Bearer ${token}`
-                }
-              }
-            )
-            const responseClassificacao= await axios.get(
-              'http://127.0.0.1:8000/api/classificacao/'+ response.data.classf,
-              {
-                headers:{
-                  'Authorization': `Bearer ${token}`
-                }
-              }
-            )
-            
-            console.log(responsegenero.data.genre, 'testando')
-            setFilmeG(response.data.titulo)
-            setGeneroG(responsegenero.data.genre)
-            setAnoG(response.data.ano)
-            setClassifG(responseClassificacao.data.classf)
-            setIdiomaG(response.data.idioma)
-            auth
-
-            console.log(response.data)
-        }catch{
-            console.log(Error)
+  useEffect(() => {
+    AsyncStorage.getItem("token")
+      .then((resp) => {
+        if (token != null) {
+          setToken(resp);
         }
-    }
+      })
+      .catch((error) => {
+        console.error("Erro ao salvar o token", error);
+      });
+  }, [base64, imageName]);
 
-    const enviar = async () => {
-        try {
-            const response = await axios.post(
-                'http://127.0.0.1:8000/api/listfilmes',
-              {
-                titulo: filme,
-                genero: genero,
-                ano: ano,
-                classf: classif,
-                idioma: idioma,
-              },
-              {
-                
-                headers:{
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json'
-                }
-              }
-            )
+  const capturar = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/filme/" + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const resp = await axios.get(
+        "http://127.0.0.1:8000/api/genero/" + response.data.genre
+      );
+      console.log("resp", resp);
+      console.log(response.data);
+      setFilmeG(response.data.titulo);
+      setGeneroG(resp.data.genre);
+      setAnoG(response.data.ano);
+      setClassifG(response.data.classif);
+      setIdiomaG(response.data.idioma);
+      setFileNameG(response.data.fileName)
+    } catch {
+      console.log(Error);
+    }
+  };
+
+  const enviar = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/listarfilmes",
+
+        {
+          titulo: filme,
+          genre: genero,
+          ano: ano,
+          classif: classif,
+          idioma: idioma,
+          fileName: imageName
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      uploadImage(base64, imageName, token)
+      
+      console.log("Dados inseridos com sucesso...");
+      setFilme("");
+      setGenero("");
+      setAno("");
+      setClassif("");
+      setIdioma("");
+      setBase64(null)
+    } catch (error) {
+      console.log("Erro ao inserir os dados...", error);
+    }
+  };
+
+  const atualizar = async () => {
+    try {
+      const response = await axios.put(
+        "http://127.0.0.1:8000/api/filme/" + id,
+        {
+          titulo: filmeG,
+          genero_id: generoG,
+          ano: anoG,
+          classif: classifG,
+          idioma: idiomaG,
           
-            console.log('Dados inseridos com sucesso...')
-            setFilme('')
-            setGenero('')
-            setAno('')
-            setClassif('')
-            setIdioma('')
-            
-          } catch (error) {
-            console.log('Erro ao inserir dados...', error)
-          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        
-        const atualizar = async () => {
-          try {
-            const response = await axios.put(
-              'http://127.0.0.1:8000/api/filme/'+id,
-              {
-                titulo: filmeG,
-                genero: generoG,
-                ano: anoG,
-                classf: classifG,
-                idioma: idiomaG,
-              },
-              {
-                headers:{
-                  'Authorization': `Bearer ${token}`
-                }
-              },
-              
-            )
-            
-            console.log('Alterado com sucesso...')
-            
-          } catch (error) {
-            console.log('Erro ao atualizar', error)
-          }
-        }
-        
-        const deletar = async () => {
-          try {
-            const response = await axios.delete(
-              'http://127.0.0.1:8000/api/filme/'+id, 
-              {
-                headers:{
-                  'Authorization': `Bearer ${token}`
-                }
-              } 
-            )
-            
-            setFilmeG('')
-            setGeneroG('')
-            setAnoG('')
-            setClassifG('')
-            setIdiomaG('')
-            // response.data.delete
-            
-            console.log('deletado com sucesso')
-
-        } catch (error) {
-            console.log('Erro ao deletar', error)
-        }
+      );
+      console.log("Alterado com sucesso...");
+    } catch (error) {
+      console.log("Erro ao atualizar", error);
     }
+  };
 
-    return (
-      
-        <View style={styles.container}>
-    
-          <View style={styles.stGet}>
+  const apagar = async () => {
+    try {
+      const response = await axios.delete(
+        "http://127.0.0.1:8000/api/filme/" + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Apagado com sucesso...");
+      setFilmeG("");
+      setGeneroG("");
+      setAnoG("");
+      setClassifG("");
+      setIdiomaG("");
+    } catch (error) {
+      console.log("Erro ao atualizar", error);
+    }
+  };
 
-            <View style={{ flexDirection: 'row', padding: 10 }}>
+  // ####################################### Imagem ###################################
 
-              <Text>ID:</Text>
-              <TextInput
-                value={id}
-                onChangeText={(e) => { setID(e) }}
-                style={styles.caixaID}
-              />
+  const pickImage = async () => {
+    // Abre a galeria para seleção de imagem
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-              {/* ---- BOTAO GET --- */}
-              <Pressable
-                style={styles.btn}
-                onPress={capturar}
-                >
-                <Text style={{ fontWeight: 'bold', }}>GET</Text>
-              </Pressable>
+    // Se o usuário não cancelar, executa o upload
+    if (!result.canceled) {
+      const imageName = result.assets[0].fileName || "image.jpg"; // Definir o nome do arquivo
+      const imageUri = result.assets[0].uri;
+      setBase64(imageUri); // Armazena a URI da imagem no estado
+      setImageName(imageName)
+    }
+  };
 
-                  {/* ---- BOTAO PUT --- */}
+  // Função de upload da imagem
+  const uploadImage = async (uri, imageName, token) => {
+    let formData = new FormData();
+    formData.append("image", {
+      uri: uri,
+      type: "image/jpeg", // Tipo do arquivo (ajustar conforme necessário)
+      name: imageName, // Nome do arquivo
+    });
 
-              <Pressable
-                style={styles.btn}
-                onPress={atualizar}
-                >
-                <Text style={{ fontWeight: 'bold', }}>PUT</Text>
-              </Pressable>
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/images/",
+        formData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-                  {/* ---- BOTAO DELETE --- */}
+      console.log("Imagem enviada com sucesso:", response.data);
+    } catch (error) {
+      console.error(
+        "Erro ao enviar a imagem:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+  // #################################### Fim Imagem ###################################
 
-              <Pressable
-                style={styles.btn}
-                onPress={deletar}
-              >
-                <Text style={{ fontWeight: 'bold', }}>DELETE</Text>
-              </Pressable>
+  return (
+    <View style={styles.container}>
+      <View style={styles.stGet}>
+        <View style={{ flexDirection: "row", padding: 10 }}>
+          <Text>ID:</Text>
+          <TextInput
+            value={id}
+            onChangeText={(e) => {
+              setID(e);
+            }}
+            style={styles.caixaID}
+          />
+          <Pressable style={styles.btnGe} onPress={capturar}>
+            <Text style={{ fontWeight: "bold" }}>GET</Text>
+          </Pressable>
+          <Pressable style={styles.btnPu} onPress={atualizar}>
+            <Text style={{ fontWeight: "bold" }}>PUT</Text>
+          </Pressable>
+          <Pressable style={styles.btnDe} onPress={apagar}>
+            <Text style={{ fontWeight: "bold" }}>DEL</Text>
+          </Pressable>
+        </View>
+        <Text>Filme</Text>
+        <TextInput
+          style={styles.caixaGet}
+          value={filmeG}
+          onChangeText={(e) => setFilmeG(e)}
+        />
 
+        <Text>Gênero</Text>
+        <TextInput
+          style={styles.caixaGet}
+          value={generoG}
+          onChangeText={(e) => setGeneroG(e)}
+        />
 
-            </View>
-
-                <Text>Filme</Text>
-                <TextInput
-                    value={filmeG}
-                    style={styles.caixaGet}
-                    onChangeText={(e)=>setFilmeG(e)}
-                />
-
-                <Text>Gênero</Text>
-                <TextInput
-                    value={generoG}
-                    style={styles.caixaGet}
-                    onChangeText={(e)=>setGeneroG(e)}
-                />
-
-              <View>
-                <View>
-                  <Text>Ano</Text>
-                    <TextInput
-                        value={anoG}
-                        style={styles.caixaGet}
-                        onChangeText={(e)=>setAnoG(e)}
-                    />
-
-                    <Text>Idioma</Text>
-                    <TextInput
-                        value={idiomaG}
-                        style={styles.caixaGet}
-                        onChangeText={(e)=>setIdiomaG(e)}
-                    />
-
-                    <Text>Classificação</Text>
-                    <TextInput
-                        value={classifG}
-                        style={styles.caixaGet}
-                        onChangeText={(e)=>setClassifG(e)}
-                    />
-                </View>
-
-                <View>
-                  <View
-                    style={styles.img}
-                  >
-
-                  </View>
-                </View>
-               
-              </View>
-                
-            
-          </View>
-    
-          <View style={styles.stPost}>
-            
-            <Pressable
-                style={styles.btn}
-                onPress={enviar}
-
-              >
-                <Text style={{ fontWeight: 'bold', }}>POST</Text>
-            </Pressable>
-
-            <Text>Filme</Text>
-            <TextInput
-              value={filme}
-              onChangeText={(e) => { setFilme(e) }}
-              style={styles.caixaPost}
-            />
-
-            <Text>Gênero</Text>
-            <TextInput
-              value={genero}
-              onChangeText={(e) => { setGenero(e) }}
-              style={styles.caixaPost}
-            />
-
+        <View style={styles.foto03}>
+          <View style={styles.foto01}>
             <Text>Ano</Text>
             <TextInput
-              value={ano}
-              onChangeText={(e) => { setAno(e) }}
-              style={styles.caixaPost}
+              style={styles.caixaGet2}
+              value={anoG}
+              onChangeText={(e) => setAnoG(e)}
             />
 
             <Text>Idioma</Text>
             <TextInput
-              value={idioma}
-              onChangeText={(e) => { setIdioma(e) }}
-              style={styles.caixaPost}
+              style={styles.caixaGet2}
+              value={idiomaG}
+              onChangeText={(e) => setIdiomaG(e)}
             />
 
             <Text>Classificação</Text>
             <TextInput
-              value={classif}
-              onChangeText={(e) => { setClassif(e) }}
-              style={styles.caixaPost}
+              style={styles.caixaGet2}
+              value={classifG}
+              onChangeText={(e) => setClassifG(e)}
             />
           </View>
+          <View style={styles.foto02}>
+            <Image
+              style={styles.foto04}
+              source={{ uri: imageSource}}
+            />
+          </View>
+          
         </View>
-      )
+      </View>
+
+      <View style={styles.stPost}>
+        <Pressable style={styles.btnPo} onPress={enviar}>
+          <Text style={{ fontWeight: "bold" }}>POST</Text>
+        </Pressable>
+        <Text>Filme</Text>
+        <TextInput
+          value={filme}
+          onChangeText={(e) => {
+            setFilme(e);
+          }}
+          style={styles.caixaPost}
+        />
+        <Text>Gênero</Text>
+        <TextInput
+          value={genero}
+          onChangeText={(e) => {
+            setGenero(e);
+          }}
+          style={styles.caixaPost}
+        />
+        <View style={styles.foto03}>
+          <View style={styles.foto01}>
+            <Text>Ano</Text>
+            <TextInput
+              value={ano}
+              onChangeText={(e) => {
+                setAno(e);
+              }}
+              style={styles.caixaPost2}
+            />
+            <Text>Idioma</Text>
+            <TextInput
+              value={idioma}
+              onChangeText={(e) => {
+                setIdioma(e);
+              }}
+              style={styles.caixaPost2}
+            />
+            <Text>Classificação</Text>
+            <TextInput
+              value={classif}
+              onChangeText={(e) => {
+                setClassif(e);
+              }}
+              style={styles.caixaPost2}
+            />
+          </View>
+          <Pressable style={styles.foto02} onPress={pickImage}>
+            <Image
+              style={styles.foto04}
+              source={{
+                uri: base64,
+              }}
+            />
+          </Pressable>
+        </View>
+      </View>
+    </View>
+  );
 }

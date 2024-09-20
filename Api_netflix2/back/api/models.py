@@ -16,4 +16,4 @@ class Filmes(models.Model):
     classf = models.ForeignKey (Classificacao, on_delete=models.CASCADE)
     
 class Images(models.Model):
-    imagem = models.ImageFild(upload_to='capas', blank=True, null=True)
+    imagem = models.ImageField(upload_to='capas/', blank=True, null=True)
